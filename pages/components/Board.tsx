@@ -1,5 +1,5 @@
 import { memo, useCallback } from "react";
-import { Tile } from "@/pages/components/Mines.type";
+import { Tile } from "@/types/Mines.type";
 
 
 type BoardType = {
@@ -21,7 +21,7 @@ const Board = ({ board, isGodMode, boardClick, boardRightClick }: BoardType) => 
         return '';
     }, [isGodMode]);
 
-    return board.map((row, rowIndex) => (
+    return board?.map((row, rowIndex) => (
         <div key={rowIndex} className="flex gap-0.5">
             {row.map((col, colIndex) => {
                 return (

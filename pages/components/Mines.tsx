@@ -1,9 +1,6 @@
 import { useCallback, useEffect, useState, useRef, ChangeEvent } from "react";
 import Board from "@/pages/components/Board";
-import { Level, Tile, levelSettings, adjacentMines } from "@/pages/components/Mines.type";
-
-
-
+import { Level, Tile, levelSettings, adjacentMines } from "@/types/Mines.type";;
 
 // Emoji 💣 🚩 🎮 🏆 🎉 ☠️ 🔄 🤔 ❓
 
@@ -261,7 +258,7 @@ const Mines = () => {
             </div>
             <div className="text-orange-300 font-bold cursor-pointer" onClick={() => reStart()}>Restart 🔄</div>
             <div className=" space-y-0.5" onContextMenu={(e) => e.preventDefault()}>
-                <Board board={board} isGodMode={isGodMode} boardClick={boardClick} boardRightClick={boardRightClick} />
+                <Board board={board || []} isGodMode={isGodMode} boardClick={boardClick} boardRightClick={boardRightClick} />
             </div>
             {!isGaming && !isWin && <div className="text-red-700 font-bold">Game Over ☠️</div>}
             {isWin && <div className="text-green-500 font-bold">🏆 恭喜！你贏了！ 🎉</div>}
