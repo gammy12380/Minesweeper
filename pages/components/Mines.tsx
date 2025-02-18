@@ -136,24 +136,31 @@ const Mines = () => {
         e.preventDefault()
         if (e.button !== 2 || !isGaming || cell.isRevealed) return
         setBoard((prev) => {
-            const newBoard = [...prev];
-            const cell = newBoard[rowIndex][colIndex]
+            const newBoard = prev.map((row, rIdx) =>
+                row.map((cell, cIdx) => {
+                    if (rIdx !== rowIndex || cIdx !== colIndex) return cell;
 
-            if (!cell.isFlagged && !cell.isQuestioned) {
-                cell.isFlagged = true
-                cell.isQuestioned = false
-                setMines((prev) => prev - 1)
-            } else if (cell.isFlagged) {
-                cell.isQuestioned = true
-                cell.isFlagged = false
-                setMines((prev) => prev + 1)
-            } else {
-                cell.isQuestioned = false
-                cell.isFlagged = false
-            }
+                    const newCell = { ...cell };
 
-            return newBoard
-        })
+                    if (!newCell.isFlagged && !newCell.isQuestioned) {
+                        newCell.isFlagged = true;
+                        newCell.isQuestioned = false;
+                        setMines((prev) => prev - 1);
+                    } else if (newCell.isFlagged) {
+                        newCell.isQuestioned = true;
+                        newCell.isFlagged = false;
+                        setMines((prev) => prev + 1);
+                    } else {
+                        newCell.isQuestioned = false;
+                        newCell.isFlagged = false;
+                    }
+
+                    return newCell;
+                })
+            );
+
+            return newBoard;
+        });
     }, [isGaming])
 
 
@@ -189,7 +196,7 @@ const Mines = () => {
         }
 
         setBoard((prev) => {
-            const newBoard = [...prev]
+            const newBoard = structuredClone(prev)
             const cell = newBoard[rowIndex][colIndex];
             // 處理格子的狀態
             if (cell.isMine && !cell.isQuestioned && !cell.isFlagged) {
@@ -197,15 +204,13 @@ const Mines = () => {
                 cell.clicked = true
                 setIsTimerStarted(false);
                 setGaming(false);
-                setBoard(prev => prev.map(row => row.map(cell => {
-                    if (cell.isMine) {
-                        return {
-                            ...cell,
-                            isRevealed: true,
+                newBoard.forEach(row =>
+                    row.forEach(cell => {
+                        if (cell.isMine) {
+                            cell.isRevealed = true;
                         }
-                    }
-                    return { ...cell }
-                })));
+                    })
+                );
             } else {
                 // 清除旗標或問題狀態
                 if (cell.isFlagged) {
